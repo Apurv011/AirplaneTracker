@@ -3,8 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AirplaneTile extends StatelessWidget {
-  AirplaneTile({this.location, this.lon, this.lat, this.id, this.velocity});
+  AirplaneTile(
+      {this.lamin,
+      this.lomin,
+      this.lamax,
+      this.lomax,
+      this.location,
+      this.lon,
+      this.lat,
+      this.id,
+      this.velocity});
 
+  final double lamin;
+  final double lomin;
+  final double lamax;
+  final double lomax;
   final String location;
   final double lon;
   final double lat;
@@ -17,7 +30,8 @@ class AirplaneTile extends StatelessWidget {
       children: [
         ListTile(
           onTap: () {
-            Get.to(LocationOfSinglePlane(), arguments: [lat, lon, id]);
+            Get.to(LocationOfSinglePlane(),
+                arguments: [lamin, lomin, lamax, lomax, lat, lon, id]);
           },
           title: Padding(
             padding: EdgeInsets.only(top: 9.0),

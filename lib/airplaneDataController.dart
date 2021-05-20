@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'airplaneTile.dart';
 import 'networking.dart';
 
-final fixedUrl =
-    "https://opensky-network.org/api/states/all?lamin=8.0666667&lomin=68.11666666666666&lamax=37.1&lomax=97.41666666666667";
+final fixedUrl = "https://opensky-network.org/api/states/all?";
 
 class AirplaneDataController extends GetxController {
+  AirplaneDataController({this.lamin, this.lomin, this.lamax, this.lomax});
+  double lamin;
+  double lomin;
+  double lamax;
+  double lomax;
+
   var airplaneTiles = List<Widget>().obs;
   var location = "Location".obs;
   var showSpinner = true.obs;
@@ -23,7 +28,8 @@ class AirplaneDataController extends GetxController {
 
   Future<void> updateUI() async {
     NetworkHelper networkHelper = NetworkHelper();
-    var data = await networkHelper.getData(fixedUrl);
+    var data = await networkHelper.getData(
+        "${fixedUrl}lamin=$lamin&lomin=$lomin&lamax=$lamax&lomax=$lomax");
     for (var i = 0; i < data['states'].length; i++) {
       id.value = data['states'][i][0];
       location.value = data['states'][i][2];
@@ -33,6 +39,10 @@ class AirplaneDataController extends GetxController {
 
       airplaneTiles.add(
         new AirplaneTile(
+          lamin: lamin,
+          lomin: lomin,
+          lamax: lamax,
+          lomax: lomax,
           location: location.value,
           lon: lon.value,
           lat: lat.value,

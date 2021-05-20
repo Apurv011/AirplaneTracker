@@ -4,7 +4,11 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'airplaneDataController.dart';
 
 class Airplane extends StatelessWidget {
-  final airplaneQuakeDataController = Get.put(AirplaneDataController());
+  Airplane({this.lamin, this.lomin, this.lamax, this.lomax});
+  double lamin;
+  double lomin;
+  double lamax;
+  double lomax;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,8 @@ class Airplane extends StatelessWidget {
         ),
       ),
       body: GetX<AirplaneDataController>(
-          init: AirplaneDataController(),
+          init: AirplaneDataController(
+              lamin: lamin, lomin: lomin, lamax: lamax, lomax: lomax),
           builder: (controller) {
             return ModalProgressHUD(
               inAsyncCall: controller.showSpinner.value,

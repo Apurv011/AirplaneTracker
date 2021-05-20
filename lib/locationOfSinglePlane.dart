@@ -12,11 +12,11 @@ class LocationOfSinglePlane extends StatefulWidget {
 
 class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
   final fixedUrl =
-      "https://opensky-network.org/api/states/all?lamin=8.0666667&lomin=68.11666666666666&lamax=37.1&lomax=97.41666666666667";
+      "https://opensky-network.org/api/states/all?lamin=${Get.arguments[0]}&lomin=${Get.arguments[1]}&lamax=${Get.arguments[2]}&lomax=${Get.arguments[3]}";
 
-  var lat = Get.arguments[0];
-  var lon = Get.arguments[1];
-  var id = Get.arguments[2];
+  var lat = Get.arguments[4];
+  var lon = Get.arguments[5];
+  var id = Get.arguments[6];
 
   @override
   Widget build(BuildContext context) {
