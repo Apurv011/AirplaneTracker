@@ -6,7 +6,8 @@ import 'package:latlong/latlong.dart';
 import 'networking.dart';
 import 'package:get/get.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'popupMenuItems.dart';
+import 'data.dart';
+import 'package:flag/flag.dart';
 
 class LocationPage extends StatefulWidget {
   @override
@@ -22,88 +23,67 @@ class _LocationPageState extends State<LocationPage> {
   var fixedUrl = "https://opensky-network.org/api/states/all?";
 
   List<Marker> markers = [];
-  List<PopupMenuItem> popupMenuItems = [];
+  List<Widget> drawerItems = [];
 
   @override
   // ignore: missing_return
   Future<void> initState() {
     super.initState();
-    int i = 0;
-    popupMenuItems.add(
-      PopupMenuItem(
-        value: 0,
+    updateUI();
+    drawerItems.add(
+      Padding(
+        padding: const EdgeInsets.all(40.0),
         child: Column(
           children: [
-            Text(
-              "Select Area",
-            ),
-            SizedBox(
-              height: 3.0,
-              width: 400,
-              child: Divider(
-                indent: 40.0,
-                color: Colors.black54,
+            CircleAvatar(
+              radius: 55,
+              backgroundColor: Colors.white,
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(
+                    "https://www.pngitem.com/pimgs/m/551-5510619_clipart-of-a-plane-hd-png-download.png"),
               ),
             ),
+            SizedBox(height: 20.0),
+            Text(
+              'Select Area',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
           ],
         ),
       ),
     );
+    drawerItems.add(
+      Divider(
+        height: 1,
+        thickness: 1,
+      ),
+    );
     for (String key in map.keys) {
-      popupMenuItems.add(
-        new PopupMenuItem(
-          value: i++,
-          child: TextButton(
-            onPressed: () {
-              setState(() {
-                lamin = map[key][1];
-                lomin = map[key][0];
-                lamax = map[key][3];
-                lomax = map[key][2];
-              });
-              updateUI();
-              Navigator.pop(context);
-            },
-            child: Text(
-              key,
-              textAlign: TextAlign.center,
-            ),
+      drawerItems.add(
+        ListTile(
+          tileColor: Colors.white24,
+          leading: Flag(
+            map[key][0],
+            height: 30,
+            width: 50,
+            fit: BoxFit.fill,
           ),
+          title: Text(key),
+          onTap: () {
+            setState(() {
+              lamin = map[key][2];
+              lomin = map[key][1];
+              lamax = map[key][4];
+              lomax = map[key][3];
+            });
+            updateUI();
+            Navigator.pop(context);
+          },
         ),
       );
     }
-    popupMenuItems.add(
-      PopupMenuItem(
-        value: i,
-        child: TextButton(
-          onPressed: () {
-            Get.to(Airplane(
-                lamin: lamin, lomin: lomin, lamax: lamax, lomax: lomax));
-          },
-          child: Column(
-            children: [
-              SizedBox(
-                height: 3.0,
-                width: 400,
-                child: Divider(
-                  indent: 40.0,
-                  color: Colors.black54,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Text(
-                  "Available Airplanes for selected Area",
-                  style: TextStyle(color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    updateUI();
   }
 
   Future<void> updateUI() async {
@@ -140,14 +120,41 @@ class _LocationPageState extends State<LocationPage> {
         actions: [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: PopupMenuButton(itemBuilder: (context) {
-              return popupMenuItems;
-            }),
+            child: PopupMenuButton(
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    value: 0,
+                    child: TextButton(
+                      onPressed: () {
+                        Get.to(Airplane(
+                            lamin: lamin,
+                            lomin: lomin,
+                            lamax: lamax,
+                            lomax: lomax));
+                      },
+                      child: Text(
+                        "Available Airplanes for selected Area",
+                        style: TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ];
+              },
+            ),
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: drawerItems,
+        ),
+      ),
       body: new FlutterMap(
         options: new MapOptions(
+          zoom: 2.0,
           center: new LatLng(20.593684, 78.96288),
         ),
         layers: [
