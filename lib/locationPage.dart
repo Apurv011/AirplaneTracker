@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'data.dart';
 import 'package:flag/flag.dart';
+import 'dart:math' as math;
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LocationPage extends StatefulWidget {
   @override
@@ -19,6 +21,7 @@ class _LocationPageState extends State<LocationPage> {
   double lomin = 68.11666666666666;
   double lamax = 37.1;
   double lomax = 97.41666666666667;
+  bool showSpinner = true;
 
   var fixedUrl = "https://opensky-network.org/api/states/all?";
 
@@ -40,8 +43,7 @@ class _LocationPageState extends State<LocationPage> {
               backgroundColor: Colors.white,
               child: CircleAvatar(
                 radius: 60,
-                backgroundImage: NetworkImage(
-                    "https://www.pngitem.com/pimgs/m/551-5510619_clipart-of-a-plane-hd-png-download.png"),
+                backgroundImage: AssetImage("images/bg.png"),
               ),
             ),
             SizedBox(height: 20.0),
@@ -87,6 +89,7 @@ class _LocationPageState extends State<LocationPage> {
   }
 
   Future<void> updateUI() async {
+    showSpinner = true;
     NetworkHelper networkHelper = NetworkHelper();
     var data = await networkHelper.getData(
         "${fixedUrl}lamin=$lamin&lomin=$lomin&lamax=$lamax&lomax=$lomax");
@@ -99,15 +102,19 @@ class _LocationPageState extends State<LocationPage> {
             height: 80.0,
             point: LatLng(data['states'][i][6], data['states'][i][5]),
             builder: (ctx) => Container(
-              child: Icon(
-                Icons.airplanemode_active,
-                size: 25.0,
-                color: Colors.black,
+              child: Transform.rotate(
+                angle: data['states'][i][10] * math.pi / 180,
+                child: Icon(
+                  Icons.airplanemode_active,
+                  size: 25.0,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
         );
       }
+      showSpinner = false;
     });
   }
 
@@ -127,6 +134,7 @@ class _LocationPageState extends State<LocationPage> {
                     value: 0,
                     child: TextButton(
                       onPressed: () {
+                        Navigator.pop(context);
                         Get.to(Airplane(
                             lamin: lamin,
                             lomin: lomin,
@@ -152,20 +160,23 @@ class _LocationPageState extends State<LocationPage> {
           children: drawerItems,
         ),
       ),
-      body: new FlutterMap(
-        options: new MapOptions(
-          zoom: 2.0,
-          center: new LatLng(20.593684, 78.96288),
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: FlutterMap(
+          options: new MapOptions(
+            zoom: 2.0,
+            center: new LatLng(20.593684, 78.96288),
+          ),
+          layers: [
+            new TileLayerOptions(
+                urlTemplate: FlutterConfig.get('MAP_BOX_STYLE'),
+                additionalOptions: {
+                  'accessToken': FlutterConfig.get('MAP_BOX_TOKEN'),
+                  'id': 'mapbox.mapbox-streets-v7'
+                }),
+            MarkerLayerOptions(markers: markers),
+          ],
         ),
-        layers: [
-          new TileLayerOptions(
-              urlTemplate: FlutterConfig.get('MAP_BOX_STYLE'),
-              additionalOptions: {
-                'accessToken': FlutterConfig.get('MAP_BOX_TOKEN'),
-                'id': 'mapbox.mapbox-streets-v7'
-              }),
-          MarkerLayerOptions(markers: markers),
-        ],
       ),
       floatingActionButton: new FloatingActionButton(
           elevation: 0.0,

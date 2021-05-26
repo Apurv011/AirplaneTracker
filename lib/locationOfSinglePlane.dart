@@ -4,6 +4,7 @@ import 'package:latlong/latlong.dart';
 import 'networking.dart';
 import 'package:get/get.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'dart:math' as math;
 
 class LocationOfSinglePlane extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
   var lat = Get.arguments[4];
   var lon = Get.arguments[5];
   var id = Get.arguments[6];
+  var angle = Get.arguments[7];
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +44,13 @@ class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
               height: 80.0,
               point: LatLng(lat, lon),
               builder: (ctx) => Container(
-                child: Icon(
-                  Icons.airplanemode_active,
-                  size: 25.0,
-                  color: Colors.black,
+                child: Transform.rotate(
+                  angle: angle * math.pi / 180,
+                  child: Icon(
+                    Icons.airplanemode_active,
+                    size: 25.0,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             )
@@ -65,6 +70,7 @@ class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
                 setState(() {
                   lon = data['states'][i][5];
                   lat = data['states'][i][6];
+                  angle = data['states'][i][10];
                 });
               }
             }

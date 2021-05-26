@@ -12,7 +12,8 @@ class AirplaneTile extends StatelessWidget {
       this.lon,
       this.lat,
       this.id,
-      this.velocity});
+      this.velocity,
+      this.angle});
 
   final double lamin;
   final double lomin;
@@ -21,6 +22,7 @@ class AirplaneTile extends StatelessWidget {
   final String location;
   final double lon;
   final double lat;
+  final double angle;
   final id;
   final velocity;
 
@@ -31,7 +33,7 @@ class AirplaneTile extends StatelessWidget {
         ListTile(
           onTap: () {
             Get.to(LocationOfSinglePlane(),
-                arguments: [lamin, lomin, lamax, lomax, lat, lon, id]);
+                arguments: [lamin, lomin, lamax, lomax, lat, lon, id, angle]);
           },
           title: Padding(
             padding: EdgeInsets.only(top: 9.0),

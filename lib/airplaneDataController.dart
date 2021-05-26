@@ -19,6 +19,7 @@ class AirplaneDataController extends GetxController {
   var lat = 0.0.obs;
   var lon = 0.0.obs;
   var velocity = 0.0.obs;
+  var angle = 0.0.obs;
 
   @override
   void onInit() {
@@ -36,19 +37,20 @@ class AirplaneDataController extends GetxController {
       lon.value = data['states'][i][5];
       lat.value = data['states'][i][6];
       velocity.value = data['states'][i][9].toDouble();
+      angle.value = data['states'][i][10];
 
       airplaneTiles.add(
         new AirplaneTile(
-          lamin: lamin,
-          lomin: lomin,
-          lamax: lamax,
-          lomax: lomax,
-          location: location.value,
-          lon: lon.value,
-          lat: lat.value,
-          id: id.value,
-          velocity: velocity.value,
-        ),
+            lamin: lamin,
+            lomin: lomin,
+            lamax: lamax,
+            lomax: lomax,
+            location: location.value,
+            lon: lon.value,
+            lat: lat.value,
+            id: id.value,
+            velocity: velocity.value,
+            angle: angle.value),
       );
       showSpinner.value = false;
     }
