@@ -13,7 +13,7 @@ class LocationOfSinglePlane extends StatefulWidget {
 
 class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
   final fixedUrl =
-      "https://opensky-network.org/api/states/all?lamin=${Get.arguments[0]}&lomin=${Get.arguments[1]}&lamax=${Get.arguments[2]}&lomax=${Get.arguments[3]}";
+      "${FlutterConfig.get('SERVER_URL')}lamin=${Get.arguments[0]}&lomin=${Get.arguments[1]}&lamax=${Get.arguments[2]}&lomax=${Get.arguments[3]}";
 
   var lat = Get.arguments[4];
   var lon = Get.arguments[5];

@@ -23,7 +23,7 @@ class _LocationPageState extends State<LocationPage> {
   double lomax = 97.41666666666667;
   bool showSpinner = true;
 
-  var fixedUrl = "https://opensky-network.org/api/states/all?";
+  var fixedUrl = FlutterConfig.get('SERVER_URL');
 
   List<Marker> markers = [];
   List<Widget> drawerItems = [];

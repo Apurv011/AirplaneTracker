@@ -1,9 +1,10 @@
+import 'package:flutter_config/flutter_config.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'airplaneTile.dart';
 import 'networking.dart';
 
-final fixedUrl = "https://opensky-network.org/api/states/all?";
+final fixedUrl = FlutterConfig.get('SERVER_URL');
 
 class AirplaneDataController extends GetxController {
   AirplaneDataController({this.lamin, this.lomin, this.lamax, this.lomax});
@@ -37,7 +38,7 @@ class AirplaneDataController extends GetxController {
       lon.value = data['states'][i][5];
       lat.value = data['states'][i][6];
       velocity.value = data['states'][i][9].toDouble();
-      angle.value = data['states'][i][10];
+      angle.value = data['states'][i][10].toDouble();
 
       airplaneTiles.add(
         new AirplaneTile(
