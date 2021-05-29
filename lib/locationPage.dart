@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+import 'locationOfSinglePlane.dart';
 import 'networking.dart';
 import 'package:get/get.dart';
 import 'package:flutter_config/flutter_config.dart';
@@ -10,6 +11,7 @@ import 'data.dart';
 import 'package:flag/flag.dart';
 import 'dart:math' as math;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LocationPage extends StatefulWidget {
   @override
@@ -39,12 +41,9 @@ class _LocationPageState extends State<LocationPage> {
         child: Column(
           children: [
             CircleAvatar(
-              radius: 55,
               backgroundColor: Colors.white,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage("images/bg.png"),
-              ),
+              radius: 60,
+              backgroundImage: AssetImage("images/bg.png"),
             ),
             SizedBox(height: 20.0),
             Text(
@@ -104,10 +103,54 @@ class _LocationPageState extends State<LocationPage> {
             builder: (ctx) => Container(
               child: Transform.rotate(
                 angle: data['states'][i][10] * math.pi / 180,
-                child: Icon(
-                  Icons.airplanemode_active,
-                  size: 25.0,
-                  color: Colors.black,
+                child: TextButton.icon(
+                  onPressed: () {
+                    return Alert(
+                        context: context,
+                        title: "",
+                        content: Column(
+                          children: [
+                            Text(
+                              "Origin Country: ${data['states'][i][2]}",
+                            ),
+                            Text(
+                              "Velocity: ${data['states'][i][9]}",
+                            ),
+                          ],
+                        ),
+                        buttons: [
+                          DialogButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Get.to(LocationOfSinglePlane(), arguments: [
+                                lamin,
+                                lomin,
+                                lamax,
+                                lomax,
+                                data['states'][i][6],
+                                data['states'][i][5],
+                                data['states'][i][0],
+                                data['states'][i][10]
+                              ]);
+                            },
+                            child: Text(
+                              "Track this Airplane",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ]).show();
+                  },
+                  icon: Icon(
+                    Icons.airplanemode_active,
+                    size: 25.0,
+                    color: Colors.black,
+                  ),
+                  label: Text(
+                    "",
+                  ),
                 ),
               ),
             ),
@@ -122,7 +165,7 @@ class _LocationPageState extends State<LocationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.lightBlue,
         title: Text("Airplane Tracker"),
         actions: [
           Padding(
@@ -181,7 +224,7 @@ class _LocationPageState extends State<LocationPage> {
       floatingActionButton: new FloatingActionButton(
           elevation: 0.0,
           child: new Icon(Icons.refresh),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.blue,
           onPressed: () async {
             updateUI();
             print("Pressed!");

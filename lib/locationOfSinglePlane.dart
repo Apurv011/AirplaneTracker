@@ -24,7 +24,7 @@ class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent,
+        backgroundColor: Colors.lightBlue,
         title: Text("Airplane Tracker"),
       ),
       body: new FlutterMap(
@@ -60,7 +60,7 @@ class _LocationOfSinglePlaneState extends State<LocationOfSinglePlane> {
       floatingActionButton: new FloatingActionButton(
           elevation: 0.0,
           child: new Icon(Icons.refresh),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.blue,
           onPressed: () async {
             NetworkHelper networkHelper = NetworkHelper();
             var data = await networkHelper.getData(fixedUrl);
